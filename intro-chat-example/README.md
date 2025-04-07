@@ -101,9 +101,9 @@ streamlit run streamlit_app.py
 - Temperature settings are adjusted for different use cases (deterministic vs. creative responses)
 - Environment variables are used for secure API key management
 
-## Contributing
+## Alert 
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+The code presented in this project should be considered as demonstrative and not used in as production quality.
 
 ## License
 
