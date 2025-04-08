@@ -8,6 +8,9 @@ This repository contains a collection of AI-powered tools and applications that 
 |---------|-------------|--------------|--------------|
 | [intro-chat-example](intro-chat-example/) | A text transformation demo that translates and modifies customer reviews | - Text translation and tone modification<br>- Multi-language support<br>- Professional tone transformation<br>- Streamlit web interface | - OpenAI API<br>- LangChain<br>- Streamlit<br>- Python |
 | [wikipediatool](wikipediatool/) | A research tool that combines Wikipedia search with AI-powered analysis | - Wikipedia search integration<br>- Mathematical calculations<br>- Natural language processing<br>- CLI and Web interfaces | - OpenAI API<br>- LangChain<br>- Wikipedia API<br>- Streamlit |
+| [weather-dashboard](https://github.com/anp0p/weather-dashboard) | A modern weather dashboard with AI-powered insights | - Real-time weather data fetching<br>- AI-powered weather commentary<br>- Durable workflow execution<br>- Clean, responsive web interface<br>- Fault-tolerant design | - Go<br>- Temporal<br>- OpenWeatherMap API<br>- OpenAI API |
+| [chat](https://github.com/anp0p/chat) | A real-time chat application with multiple AI model support | - Multiple AI model integration (DeepSeek, LLaMA, Gemma)<br>- Real-time streaming responses<br>- Secure authentication<br>- Markdown support with syntax highlighting<br>- Dark/Light mode | - Next.js 14<br>- TypeScript<br>- Firebase<br>- Replicate API<br>- Tailwind CSS |
+| [multi-model-image-generator](https://github.com/popand/multi-model-image-generator) | A modern AI image generation application | - Multiple AI models (Flux Pro, Flux Schnell, Ideogram)<br>- Automatic image saving and gallery<br>- Google authentication<br>- Real-time generation status<br>- Customizable parameters | - Next.js 14<br>- Firebase<br>- Replicate API<br>- Tailwind CSS<br>- TypeScript |
 
 ## Getting Started
 
