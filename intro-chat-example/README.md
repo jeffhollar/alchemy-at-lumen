@@ -27,11 +27,11 @@ A Streamlit-based web application has been included which helps businesses trans
 ## Create an OpenAI API Key 
 To create an OpenAI API key for accessing the GPT-4 model, follow these steps:
 
-1. Create an OpenAI Account: Visit the OpenAI website (https://openai.com) and sign up for an account if you don’t already have one.
+1. Create an OpenAI Account: Visit the OpenAI website (https://openai.com) and sign up for an account if you don't already have one.
 1. Log In: Once you have an account, log in to your OpenAI account.
-1. Access API Settings: Navigate to the API section. This is usually found in the dashboard under “API” or something similar.
-1. Create a New API Key: Look for an option to create a new API key. This might be labeled as “Create API Key” or something similar.
-1. Save the Key: Once the API key is generated, be sure to copy and save it in a secure location. You won’t be able to view this key again for security reasons.
+1. Access API Settings: Navigate to the API section. This is usually found in the dashboard under "API" or something similar.
+1. Create a New API Key: Look for an option to create a new API key. This might be labeled as "Create API Key" or something similar.
+1. Save the Key: Once the API key is generated, be sure to copy and save it in a secure location. You won't be able to view this key again for security reasons.
 1. Set Up Billing: Make sure you have set up payment methods, as using the API usually involves certain costs depending on usage.
 1. Start Using the API: With your API key, you can now authenticate requests to access the GPT-4 model.
 
@@ -94,6 +94,14 @@ streamlit run streamlit_app.py
    - Choose the target language
    - Enter your company name
    - Click "Translate" to process the review
+
+## Video Demonstrations
+
+### intro-chat-prompts.py Demo
+A video demonstration of the intro-chat-prompts.py application is available on YouTube. This demo showcases how to use the application for text transformation tasks using both direct OpenAI API calls and LangChain integration. Watch the demo at: https://youtu.be/tBymNmRZCgY
+
+### streamlit_app.py Web UI Demo
+A video demonstration of the Streamlit web interface is available on YouTube. This demo walks through the features of the web application, including tone transformation, multi-language support, and API key management. Watch the demo at: https://youtu.be/NA4m-ZuNBSE
 
 ## Notes
 

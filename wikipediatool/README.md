@@ -5,11 +5,11 @@ This project provides two implementations of a Wikipedia research tool that leve
 ## Create an OpenAI API Key 
 To create an OpenAI API key for accessing the GPT-4 model, follow these steps:
 
-1. Create an OpenAI Account: Visit the OpenAI website (https://openai.com) and sign up for an account if you don’t already have one.
+1. Create an OpenAI Account: Visit the OpenAI website (https://openai.com) and sign up for an account if you don't already have one.
 1. Log In: Once you have an account, log in to your OpenAI account.
-1. Access API Settings: Navigate to the API section. This is usually found in the dashboard under “API” or something similar.
-1. Create a New API Key: Look for an option to create a new API key. This might be labeled as “Create API Key” or something similar.
-1. Save the Key: Once the API key is generated, be sure to copy and save it in a secure location. You won’t be able to view this key again for security reasons.
+1. Access API Settings: Navigate to the API section. This is usually found in the dashboard under "API" or something similar.
+1. Create a New API Key: Look for an option to create a new API key. This might be labeled as "Create API Key" or something similar.
+1. Save the Key: Once the API key is generated, be sure to copy and save it in a secure location. You won't be able to view this key again for security reasons.
 1. Set Up Billing: Make sure you have set up payment methods, as using the API usually involves certain costs depending on usage.
 1. Start Using the API: With your API key, you can now authenticate requests to access the GPT-4 model.
 
@@ -94,6 +94,16 @@ streamlit run app.py
 ```
 Can you describe Quantum Computing?
 ```
+
+## Video Demonstrations
+A video demonstration is available that showcases both the CLI and WebUI versions of the Wikipedia Research Tool in action. The video demonstrates:
+
+- How to run the CLI version using `agents.py`
+- How to launch and use the WebUI version with Streamlit
+- Example queries and responses from both interfaces
+- Key features and capabilities of the tool
+
+Watch the demonstration video here: [Wikipedia Research Tool Demo](https://youtu.be/_uFisOO44ZQ)
 
 ## Requirements
 All required dependencies are listed in `requirements.txt`. The main dependencies include:

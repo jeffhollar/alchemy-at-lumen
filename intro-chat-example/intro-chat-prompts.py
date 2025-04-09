@@ -37,50 +37,65 @@ def get_completion(prompt, model=llm_model):
     )
     return response.choices[0].message.content
 
-# Example 1: Direct OpenAI API Usage
-# This section demonstrates how to:
-# 1. Modify the tone of a customer review
-# 2. Translate the modified review into another language
-customer_review = """
- Your product is terrible!  I don't know how 
- you were able to get this to the market.
- I don't want this! Actually no one should want this.
- Seriously!  Give me money now!
- 
-"""
-tone = """ Proper British English in a nice, warm, respectful tone """
-language = "Turkish"
+def transform_text(text, target_language, tone="polite"):
+    """
+    Transform the given text into the specified language with the given tone.
+    
+    Args:
+        text (str): The text to transform
+        target_language (str): The language to translate the text into
+        tone (str): The desired tone of the translation (default: "polite")
+    
+    Returns:
+        str: The transformed text
+    """
+    prompt = f""" 
+    Rewrite the following text in a {tone} tone, and then
+    please translate the new text into {target_language}.
+    
+    Text to transform:
+    {text}
+    """
+    
+    return get_completion(prompt=prompt)
 
-# Create a prompt that combines tone modification and translation
-prompt = f""" 
-  Rewrite the following {customer_review} in {tone}, and then
-  please translate the new review message into {language}.
-"""
-
-rewrite = get_completion(prompt=prompt)
-
-# Example 2: Using LangChain Framework
-# This section demonstrates:
-# 1. Using LangChain's ChatOpenAI wrapper
-# 2. Creating and using prompt templates
-# 3. Handling structured prompts with variables
-chat_model = ChatOpenAI(temperature=0.7, model=llm_model)  # Higher temperature for more creative responses
-
-# Define a template for translation with placeholders
-template_string = """ 
- Translate the following text {customer_review}
- into italiano in a polite tone.
- And the company name is {company_name}
-"""
-
-# Create a reusable prompt template
-prompt_template = ChatPromptTemplate.from_template(template_string)
-
-# Format the template with actual values
-translation_message = prompt_template.format_messages(
-    customer_review=customer_review, company_name="Google"
-)
-
-# Get the translation response
-response = chat_model.invoke(translation_message)
-print(response.content)
+# Example usage
+if __name__ == "__main__":
+    # Example text to transform
+    customer_review = """
+    Your product is terrible!  I don't know how 
+    you were able to get this to the market.
+    I don't want this! Actually no one should want this.
+    Seriously!  Give me money now!
+    """
+    
+    # Transform the text to German
+    transformed_text = transform_text(customer_review, "German")
+    print("Transformed text:")
+    print(transformed_text)
+    
+    # Example 2: Using LangChain Framework
+    chat_model = ChatOpenAI(temperature=0.7, model=llm_model)
+    
+    # Define a template for translation with placeholders
+    template_string = """ 
+    Translate the following text {text}
+    into {target_language} in a {tone} tone.
+    And the company name is {company_name}
+    """
+    
+    # Create a reusable prompt template
+    prompt_template = ChatPromptTemplate.from_template(template_string)
+    
+    # Format the template with actual values
+    translation_message = prompt_template.format_messages(
+        text=customer_review,
+        target_language="Italian",
+        tone="polite",
+        company_name="Google"
+    )
+    
+    # Get the translation response
+    response = chat_model.invoke(translation_message)
+    print("\nTransformed text using LangChain:")
+    print(response.content)
