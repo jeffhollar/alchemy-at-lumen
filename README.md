@@ -1,12 +1,13 @@
 # Alchemy at Lumen
 
-This repository contains a collection of AI-powered tools and applications that demonstrate various use cases of OpenAI's language models and LangChain framework. The projects showcase different approaches to natural language processing, text transformation, and research capabilities.
+This repository contains a collection of AI-powered tools and applications that demonstrate various use cases of OpenAI's language models and LangChain framework. The projects showcase different approaches to natural language processing, text transformation, and research capabilities. Included in this project are various projects which demonstrate various Proof-of-Concept works using various technologies.
 
 ## Projects Overview
 
 | Project | Description | Key Features | Technologies |
 |---------|-------------|--------------|--------------|
 | [intro-chat-example](intro-chat-example/) | A text transformation demo that translates and modifies customer reviews | - Text translation and tone modification<br>- Multi-language support<br>- Professional tone transformation<br>- Streamlit web interface | - OpenAI API<br>- LangChain<br>- Streamlit<br>- Python |
+| [communication-flow-api](communication-flow-api/) | A Go-based adapter service that provides an interface between network services and Temporal.io workflows. This project serves as a significant adapter that bridges the domain's workflow requirements with the underlying execution environment, enabling seamless communication between core business logic and external systems.| - Go-lang development<br>- Temporal.io<br>- Docker<br>| - OpenAI API<br>- Go-lang |
 | [wikipediatool](wikipediatool/) | A research tool that combines Wikipedia search with AI-powered analysis | - Wikipedia search integration<br>- Mathematical calculations<br>- Natural language processing<br>- CLI and Web interfaces | - OpenAI API<br>- LangChain<br>- Wikipedia API<br>- Streamlit |
 | [weather-dashboard](https://github.com/anp0p/weather-dashboard) | A modern weather dashboard with AI-powered insights | - Real-time weather data fetching<br>- AI-powered weather commentary<br>- Durable workflow execution<br>- Clean, responsive web interface<br>- Fault-tolerant design | - Go<br>- Temporal<br>- OpenWeatherMap API<br>- OpenAI API |
 | [chat](https://github.com/anp0p/chat) | A real-time chat application with multiple AI model support | - Multiple AI model integration (DeepSeek, LLaMA, Gemma)<br>- Real-time streaming responses<br>- Secure authentication<br>- Markdown support with syntax highlighting<br>- Dark/Light mode | - Next.js 14<br>- TypeScript<br>- Firebase<br>- Replicate API<br>- Tailwind CSS |
