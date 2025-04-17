@@ -1,0 +1,568 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Communication Flow API",
+    "description": "RESTful API for Communication Flow operations",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/Network/v1/Provisioning",
+      "description": "Main API server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Communication Status",
+      "description": "Communication Status APIs"
+    },
+    {
+      "name": "Communication Flow",
+      "description": "Communication Flow APIs"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Communication Status"
+        ],
+        "summary": "Returns health of communication service",
+        "description": "Returns health of communication service",
+        "operationId": "getServiceHealth",
+        "responses": {
+          "200": {
+            "description": "Service Health",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request failed due to an apparent client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request requires user authentication"
+          },
+          "500": {
+            "description": "Internal Service Error - Check log files",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info": {
+      "get": {
+        "tags": [
+          "Communication Status"
+        ],
+        "summary": "Returns communication service information ",
+        "description": "Returns communicaiton service information",
+        "operationId": "getServiceInfo",
+        "responses": {
+          "200": {
+            "description": "Returned Service Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request failed due to an apparent client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request requires user authentication"
+          },
+          "500": {
+            "description": "Internal Service Error - Check log files",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericJSON"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actRequest": {
+      "post": {
+        "tags": [
+          "Communication Flow"
+        ],
+        "summary": "Submit a new ACT request",
+        "description": "Accepts an ACT request and sends it to the processing queue",
+        "operationId": "postActRequest",
+        "parameters": [
+          {
+            "name": "wait",
+            "in": "query",
+            "description": "Wait time in seconds (forces synchronous)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "generateOnly",
+            "in": "query",
+            "description": "Generate only flag",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ACTRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ACTRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actRequest/{identifierID}": {
+      "get": {
+        "tags": [
+          "Communication Flow"
+        ],
+        "summary": "Get ACT request by identifier",
+        "description": "Retrieves an ACT request by its identifier",
+        "operationId": "getActRequest",
+        "parameters": [
+          {
+            "name": "identifierID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ACTRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actRequest/{identifierID}/processingDetails": {
+      "get": {
+        "tags": [
+          "Communication Flow"
+        ],
+        "summary": "Get processing details for an ACT request",
+        "description": "Retrieves processing details for a specific ACT request",
+        "operationId": "getProcessingDetails",
+        "parameters": [
+          {
+            "name": "identifierID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Processing details found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcessingDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lava/{identifier_id}": {
+      "post": {
+        "tags": [
+          "Communication Flow"
+        ],
+        "summary": "Continue or cancel LAVA request",
+        "description": "Accepts an ACT request to continue or cancel LAVA processing",
+        "operationId": "postLavaContinueRequest",
+        "parameters": [
+          {
+            "name": "identifier_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ACTRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Request processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ACTRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vino/{identifier_id}": {
+      "post": {
+        "tags": [
+          "Communication Flow"
+        ],
+        "summary": "Continue or cancel VINO request",
+        "description": "Accepts an ACT request to continue or cancel VINO processing",
+        "operationId": "postVinoContinueRequest",
+        "parameters": [
+          {
+            "name": "identifier_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ACTRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Request processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ACTRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rubicon/callback/{requestId}": {
+      "post": {
+        "tags": [
+          "Communication Flow"
+        ],
+        "summary": "Accept Rubicon callback",
+        "description": "Accepts feedback from Rubicon callback and sends to processing queue",
+        "operationId": "postRubiconCallback",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Callback processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ACTResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ACTRequest": {
+        "type": "object",
+        "properties": {
+          "identifier_id": {
+            "type": "string"
+          },
+          "header": {
+            "$ref": "#/components/schemas/ACTRequest_header"
+          },
+          "status": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ACTRequest_meta"
+          }
+        }
+      },
+      "ACTResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ACTResponse_error"
+          }
+        }
+      },
+      "GenericJSON": {
+        "type": "object"
+      },
+      "ProcessingDetails": {
+        "type": "object",
+        "properties": {
+          "processingDetails": {
+            "$ref": "#/components/schemas/ProcessingDetails_processingDetails"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/Error_error"
+          }
+        }
+      },
+      "ACTRequest_header": {
+        "type": "object",
+        "properties": {
+          "activity": {
+            "type": "string"
+          }
+        }
+      },
+      "ACTRequest_meta": {
+        "type": "object",
+        "properties": {
+          "generate-only": {
+            "type": "string"
+          }
+        }
+      },
+      "ACTResponse_error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ProcessingDetails_processingDetails_requestInstance": {
+        "type": "object",
+        "properties": {
+          "requestStartDateTime": {
+            "type": "string"
+          },
+          "requestEndDateTime": {
+            "type": "string"
+          },
+          "requestStatus": {
+            "type": "string"
+          },
+          "totalRequestDurationInMs": {
+            "type": "integer"
+          },
+          "templateStartDateTime": {
+            "type": "string"
+          },
+          "templateEndDateTime": {
+            "type": "string"
+          }
+        }
+      },
+      "ProcessingDetails_processingDetails": {
+        "type": "object",
+        "properties": {
+          "requestInstance": {
+            "$ref": "#/components/schemas/ProcessingDetails_processingDetails_requestInstance"
+          }
+        }
+      },
+      "Error_error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
