@@ -1,0 +1,5 @@
+nexus:
+  port: 8080
+  taskQueue: act-task-queue
+  namespace: nexus-lumen-act-ns
+  endpoint: actrequestidentifierid 

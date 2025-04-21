@@ -51,8 +51,8 @@ func (t *TemporalClient) StartWorkflow(ctx context.Context, request models.ActRe
 	log.Printf("\nStartWorkflow Invoked\n *********************\n")
 
 	options := client.StartWorkflowOptions{
-		ID:        "act-communication-workflow-" + request.IdentifierId, // Unique workflow ID
-		TaskQueue: "act-communication-task-queue",
+		ID:        "act-core-api-workflow-" + request.ActivationTransactionId, // Unique workflow ID
+		TaskQueue: "act-core-api-task-queue",
 	}
 
 	we, err := t.Client.ExecuteWorkflow(ctx, options, workflows.GetActRequestWorkflow, request)

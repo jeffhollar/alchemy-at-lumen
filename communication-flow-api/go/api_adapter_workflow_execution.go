@@ -26,6 +26,7 @@ import (
 // Parameters:
 //   - w: HTTP response writer
 //   - r: HTTP request containing the identifierID in the URL path
+//
 // Returns:
 //   - JSON response with workflow execution details or error message
 func GetActRequest(w http.ResponseWriter, r *http.Request) {
@@ -60,11 +61,6 @@ func GetActRequest(w http.ResponseWriter, r *http.Request) {
 	var request models.ActRequest
 	request.IdentifierId = identifierID
 
-	//if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-	//	errorJSON(w, fmt.Errorf("invalid request body: %v", err), http.StatusBadRequest)
-	//	return
-	//}
-
 	// Get Temporal client from context
 	temporalClient, ok := r.Context().Value("temporalClient").(client.Client)
 	if !ok {
@@ -91,7 +87,7 @@ func GetActRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetProcessingDetails is a placeholder endpoint for retrieving the processing details
-// of a workflow execution. Currently returns a "NOT IMPLEMENTED" response.
+// of a workflow execution. This currently returns a "NOT IMPLEMENTED" response.
 // Parameters:
 //   - w: HTTP response writer
 //   - r: HTTP request
@@ -110,7 +106,7 @@ func GetProcessingDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 // PostActRequest is a placeholder endpoint for submitting new ACT requests.
-// Currently returns a "NOT IMPLEMENTED" response.
+// This currently returns a "NOT IMPLEMENTED" response.
 // Parameters:
 //   - w: HTTP response writer
 //   - r: HTTP request

@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.temporal:temporal-sdk:1.28.0'
+    implementation 'io.temporal:temporal-serviceclient:1.28.0'
+    implementation 'io.temporal:temporal-nexus:1.28.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+application {
+    mainClass = 'com.lumen.workflow.worker.ActWorker'
+}
+
+// Add JAR configuration
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'com.lumen.workflow.worker.ActWorker'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Add task to create a fat JAR
+tasks.register('fatJar', Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.lumen.workflow.worker.ActWorker'
+    }
+    archiveBaseName = 'actrequest'
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+} 

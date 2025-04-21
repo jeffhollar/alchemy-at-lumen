@@ -10,6 +10,7 @@ package swagger
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -57,7 +58,10 @@ func NewRouter() *mux.Router {
 //   - w: HTTP response writer
 //   - r: HTTP request
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Act Core API Service")
+	_, err := fmt.Fprintf(w, "Act Core API Service")
+	if err != nil {
+		return
+	}
 }
 
 var routes = Routes{
@@ -418,4 +422,45 @@ var routes = Routes{
 		"/Network/v1/Provisioning/status/updates/{requestId}",
 		StatusUpdatesRequestIdGet,
 	},
+}
+
+// debug logs debug-level messages with the act-core prefix
+// Parameters:
+//   - template: Message template with format specifiers
+//   - values: Values to be formatted into the template
+func debug(template string, values ...interface{}) {
+	log.Printf("[act-core][info] "+template+"\n", values...)
+}
+
+// infoMsg logs info-level messages with the act-core prefix
+// Parameters:
+//   - template: Message template with format specifiers
+//   - values: Values to be formatted into the template
+func infoMsg(template string, values ...interface{}) {
+	log.Printf("[act-core][info] "+template+"\n", values...)
+}
+
+// errorMsg logs error-level messages with the act-core prefix
+// Parameters:
+//   - template: Message template with format specifiers
+//   - values: Values to be formatted into the template
+func errorMsg(template string, values ...interface{}) {
+	log.Printf("[act-core][failure] "+template+"\n", values...)
+}
+
+// isAuthorized checks if a user token is valid and authorized
+// Parameters:
+//   - user_token: The user's authentication token
+//
+// Returns:
+//   - bool: Whether the user is authorized
+//   - error: Any error that occurred during authorization
+func isAuthorized(user_token string) (bool, error) {
+
+	// Validate User Token to determine if authorized
+	// TBA
+	// infoMsg("isAuthorized: ", ollama_token)
+
+	// Add logic to validate token
+	return true, nil
 }
