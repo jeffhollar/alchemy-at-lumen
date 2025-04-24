@@ -3,61 +3,60 @@ package com.lumen.workflow.worker;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import io.temporal.client.WorkflowClient;
-import io.temporal.serviceclient.WorkflowServiceStubs;
-import com.lumen.workflow.options.ClientOptions;
 import com.lumen.workflow.workflow.ActWorkflowImpl;
-import com.lumen.workflow.service.ActServiceImpl;
+import com.lumen.workflow.service.NexusServiceImpl;
+import com.lumen.workflow.config.TemporalProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
+@Component
 public class ActWorker {
     private static final Logger logger = LoggerFactory.getLogger(ActWorker.class);
     
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: ActWorker <properties-file>");
-            System.exit(1);
-        }
-        
+    private final WorkflowClient workflowClient;
+    private final WorkerFactory factory;
+    private final TemporalProperties temporalProperties;
+    private Worker worker;
+    
+    @Autowired
+    public ActWorker(WorkflowClient workflowClient, TemporalProperties temporalProperties) {
+        this.workflowClient = workflowClient;
+        this.temporalProperties = temporalProperties;
+        this.factory = WorkerFactory.newInstance(workflowClient);
+    }
+    
+    @PostConstruct
+    public void start() {
         try {
-            // Load client options from properties file
-            ClientOptions options = ClientOptions.fromProperties(args[0]);
-            
-            // Create a Temporal service client with the loaded options
-            WorkflowServiceStubs service = WorkflowServiceStubs.newInstance(
-                    options.getServiceStubsOptions());
-            WorkflowClient client = WorkflowClient.newInstance(
-                    service, options.getClientOptions());
-            
-            // Create a worker factory
-            WorkerFactory factory = WorkerFactory.newInstance(client);
+            String taskQueue = temporalProperties.getTaskQueue();
+            logger.info("Starting worker with task queue: {}", taskQueue);
             
             // Create a worker
-            Worker worker = factory.newWorker("act-task-queue");
+            worker = factory.newWorker(taskQueue);
             
             // Register workflow and activities
             worker.registerWorkflowImplementationTypes(ActWorkflowImpl.class);
-            worker.registerActivitiesImplementations(new ActServiceImpl());
+            worker.registerActivitiesImplementations(new NexusServiceImpl());
             
-            // Start the worker
+            // Start the worker factory
             factory.start();
             
-            logger.info("Worker started for task queue: act-task-queue");
-            logger.info("Connected to Temporal server at: {}", options.getTargetHost());
-            logger.info("Using namespace: {}", options.getNamespace());
-            
-            // Keep the worker running
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                logger.info("Shutting down worker...");
-                factory.shutdown();
-                service.shutdown();
-            }));
-            
-            // Wait for shutdown
-            Thread.currentThread().join();
+            logger.info("Worker started successfully");
         } catch (Exception e) {
             logger.error("Error starting worker", e);
-            System.exit(1);
+            throw new RuntimeException("Failed to start worker", e);
+        }
+    }
+    
+    @PreDestroy
+    public void stop() {
+        logger.info("Shutting down worker...");
+        if (factory != null) {
+            factory.shutdown();
         }
     }
 } 

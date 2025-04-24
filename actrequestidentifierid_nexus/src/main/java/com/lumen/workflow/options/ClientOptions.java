@@ -36,26 +36,34 @@ public class ClientOptions {
     }
     
     public static ClientOptions fromProperties(String propertiesFile) {
-        ClientOptions options = new ClientOptions();
         try {
             Properties props = new Properties();
             props.load(new FileInputStream(propertiesFile));
-            
-            options.targetHost = props.getProperty("target-host", options.targetHost);
-            options.namespace = props.getProperty("namespace", options.namespace);
-            options.serverRootCACert = props.getProperty("server-root-ca-cert");
-            options.clientCert = props.getProperty("client-cert");
-            options.clientKey = props.getProperty("client-key");
-            options.serverName = props.getProperty("server-name");
-            options.insecureSkipVerify = Boolean.parseBoolean(props.getProperty("insecure-skip-verify", "false"));
-            options.apiKey = props.getProperty("api-key");
-            
-            validateOptions(options);
+            return fromProperties(props);
         } catch (Exception e) {
             logger.error("Error loading properties file", e);
             throw new RuntimeException("Failed to load client options", e);
         }
-        return options;
+    }
+    
+    public static ClientOptions fromProperties(Properties props) {
+        ClientOptions options = new ClientOptions();
+        try {
+            options.targetHost = props.getProperty("temporal.target-host", options.targetHost);
+            options.namespace = props.getProperty("temporal.namespace", options.namespace);
+            options.serverRootCACert = props.getProperty("security.ssl.server-root-ca-cert");
+            options.clientCert = props.getProperty("security.ssl.client-cert");
+            options.clientKey = props.getProperty("security.ssl.client-key");
+            options.serverName = props.getProperty("security.ssl.server-name");
+            options.insecureSkipVerify = Boolean.parseBoolean(props.getProperty("security.ssl.insecure-skip-verify", "false"));
+            options.apiKey = props.getProperty("security.api-key");
+            
+            validateOptions(options);
+            return options;
+        } catch (Exception e) {
+            logger.error("Error processing properties", e);
+            throw new RuntimeException("Failed to process client options", e);
+        }
     }
     
     private static void validateOptions(ClientOptions options) {

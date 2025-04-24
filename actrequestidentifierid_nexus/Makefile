@@ -6,42 +6,51 @@ PROPERTIES_FILE=config/temporal.properties
 # Build the worker jar
 .PHONY: build
 build:
-	./gradlew fatJar
+	./gradlew clean build bootJar
+
+# Build the tests
+.PHONY: build-tests
+build-tests:
+	./gradlew clean test build
 
 # Run the worker
 .PHONY: run-worker
-run-worker: build
-	java -jar $(JAR_PATH) $(PROPERTIES_FILE)
+run-worker:
+	java -jar build/libs/actrequest-1.0.0.jar \
+		--spring.profiles.active=dev \
+		--server.port=8080
 
-# Run the workflow client
-.PHONY: run-workflow
-run-workflow: build
-	java -cp $(JAR_PATH) com.lumen.workflow.client.ActClient $(PROPERTIES_FILE)
+# Run the workflow client service
+.PHONY: run-service
+run-service:
+	java -jar build/libs/actrequest-1.0.0.jar \
+		--spring.profiles.active=dev,client \
+		--server.port=8081
 
 # Clean build artifacts
 .PHONY: clean
 clean:
 	./gradlew clean
 
+# Run tests
+.PHONY: test
+test:
+	./gradlew test
+
+# Run the Spring Boot application
+.PHONY: run
+run:
+	./gradlew bootRun -Dconfig.file=config.properties
+
 # Help target
 .PHONY: help
 help:
-	@echo "Available targets:"
-	@echo "  build        - Build the worker jar"
-	@echo "  run-worker   - Run the worker"
-	@echo "  run-workflow - Run the workflow client"
-	@echo "  clean        - Clean build artifacts"
-	@echo "  help         - Show this help message"
+	@echo "Available commands:"
+	@echo "  make build        - Build the project"
+	@echo "  make clean        - Clean build artifacts"
+	@echo "  make test         - Run tests"
+	@echo "  make run-worker   - Run the worker"
+	@echo "  make run-service - Run the service client"
 
 # Default target
-.DEFAULT_GOAL := help
-
-# Nexus service commands
-start-nexus:
-	@echo "Starting Nexus server..."
-	@java -cp build/libs/actrequestidentifierid_wf.jar com.lumen.workflow.nexus.ActNexusServer
-
-test-nexus:
-	@echo "Testing Nexus service..."
-	@chmod +x tests/service_test.sh
-	@./tests/service_test.sh 
+.DEFAULT_GOAL := help 

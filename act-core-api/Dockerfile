@@ -11,13 +11,13 @@ COPY . .
 
 # Build the application
 ENV CGO_ENABLED=0
-RUN go build -o communication-service .
+RUN go build -o act-core-service .
 
 # Use a minimal runtime image
 FROM alpine:3.19
 
 WORKDIR /app
-COPY --from=build /app/communication-service .
+COPY --from=build /app/act-core-service .
 # Copy SSL certificate files
 COPY key.pem server.key ./
 # Copy Swagger UI files
@@ -27,4 +27,4 @@ COPY swaggerui ./swaggerui/
 EXPOSE 8501
 
 # Run the application
-ENTRYPOINT ["./communication-service"]
+ENTRYPOINT ["./act-core-service"]

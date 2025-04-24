@@ -1,45 +1,37 @@
 package com.lumen.workflow.workflow;
 
-import io.temporal.workflow.Workflow;
 import io.temporal.activity.ActivityOptions;
-import com.lumen.workflow.model.ActRequest;
-import com.lumen.workflow.model.ActResponse;
-import com.lumen.workflow.model.ActResponseError;
-import com.lumen.workflow.service.ActService;
-import org.slf4j.Logger;
-
+import io.temporal.workflow.Workflow;
+import com.lumen.workflow.service.NexusService;
 import java.time.Duration;
 
 public class ActWorkflowImpl implements ActWorkflow {
-    private static final Logger logger = Workflow.getLogger(ActWorkflowImpl.class);
-    
-    private final ActService actService = Workflow.newActivityStub(
-        ActService.class,
-        ActivityOptions.newBuilder()
-            .setStartToCloseTimeout(Duration.ofSeconds(30))
-            .build()
-    );
+    private final NexusService nexusService;
+    private final ActivityOptions options;
+
+    public ActWorkflowImpl() {
+        this.options = ActivityOptions.newBuilder()
+                .setStartToCloseTimeout(Duration.ofSeconds(30))
+                .setRetryOptions(
+                    io.temporal.common.RetryOptions.newBuilder()
+                        .setInitialInterval(Duration.ofSeconds(1))
+                        .setMaximumInterval(Duration.ofSeconds(10))
+                        .setBackoffCoefficient(2.0)
+                        .setMaximumAttempts(3)
+                        .build()
+                )
+                .build();
+        
+        this.nexusService = Workflow.newActivityStub(NexusService.class, options);
+    }
 
     @Override
-    public ActResponse processAct(ActRequest request) {
-        logger.info("Starting ActWorkflow with request: {}", request);
-        
+    public String processRequest(String requestId, String requestData) {
         try {
-            // Call the activity
-            ActResponse response = actService.processAct(request);
-            logger.info("Received response from ActService: {}", response);
-            
-            return response;
+            return nexusService.processRequest(requestId, requestData);
         } catch (Exception e) {
-            logger.error("Error in ActWorkflow", e);
-            ActResponse response = new ActResponse();
-            response.setStatus("ERROR");
-            
-            ActResponseError error = new ActResponseError();
-            error.setMessage(e.getMessage());
-            response.setError(error);
-            
-            return response;
+            Workflow.getLogger(ActWorkflowImpl.class).error("Error processing request: " + e.getMessage());
+            throw e;
         }
     }
 } 

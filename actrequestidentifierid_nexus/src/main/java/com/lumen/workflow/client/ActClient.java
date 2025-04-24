@@ -2,42 +2,43 @@ package com.lumen.workflow.client;
 
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
-import io.temporal.serviceclient.WorkflowServiceStubs;
-import com.lumen.workflow.options.ClientOptions;
 import com.lumen.workflow.workflow.ActWorkflow;
 import com.lumen.workflow.model.ActRequest;
 import com.lumen.workflow.model.ActRequestMeta;
-import com.lumen.workflow.model.ActResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-public class ActClient {
+@Component
+@Profile("client")
+public class ActClient implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(ActClient.class);
-    private static final String TASK_QUEUE = "act-task-queue";
+    
+    @Value("${temporal.task-queue}")
+    private String taskQueue;
+    
+    private final WorkflowClient workflowClient;
+    private final ObjectMapper objectMapper;
 
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: ActClient <properties-file>");
-            System.exit(1);
-        }
+    public ActClient(WorkflowClient workflowClient, ObjectMapper objectMapper) {
+        this.workflowClient = workflowClient;
+        this.objectMapper = objectMapper;
+    }
 
+    @Override
+    public void run(String... args) {
         try {
-            // Load client options from properties file
-            ClientOptions options = ClientOptions.fromProperties(args[0]);
-
-            // Create a Temporal service client
-            WorkflowServiceStubs service = WorkflowServiceStubs.newInstance(
-                    options.getServiceStubsOptions());
-            WorkflowClient client = WorkflowClient.newInstance(
-                    service, options.getClientOptions());
-
             // Create workflow options
             WorkflowOptions workflowOptions = WorkflowOptions.newBuilder()
-                    .setTaskQueue(TASK_QUEUE)
+                    .setTaskQueue(taskQueue)
                     .build();
 
             // Create a workflow stub
-            ActWorkflow workflow = client.newWorkflowStub(ActWorkflow.class, workflowOptions);
+            ActWorkflow workflow = workflowClient.newWorkflowStub(ActWorkflow.class, workflowOptions);
 
             // Create a sample request
             ActRequest request = new ActRequest();
@@ -48,16 +49,16 @@ public class ActClient {
             request.setFeedback("Test feedback");
             request.setYang("Test YANG data");
 
+            // Convert request to JSON string
+            String requestData = objectMapper.writeValueAsString(request);
+
             // Start the workflow
             logger.info("Starting workflow with request: {}", request);
-            ActResponse response = workflow.processAct(request);
-            logger.info("Workflow completed with response: {}", response);
-
-            // Shutdown the client
-            service.shutdown();
+            String result = workflow.processRequest(request.getMeta().getRequestId(), requestData);
+            logger.info("Workflow completed with result: {}", result);
         } catch (Exception e) {
             logger.error("Error running workflow", e);
-            System.exit(1);
+            throw new RuntimeException("Failed to run workflow", e);
         }
     }
 } 

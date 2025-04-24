@@ -50,7 +50,7 @@ The service can be configured using environment variables:
 ```bash
 export GO111MODULE=on
 go mod download
-go build -o communication-service
+go build -o act-core-service
 ```
 
 ### Docker Build
@@ -58,7 +58,7 @@ go build -o communication-service
 The project includes a Dockerfile for containerized deployment. To build the Docker image:
 
 ```bash
-docker build -t comapi-1.0.0 .
+docker build -t apicore-1.0.0 .
 ```
 
 ## Running the Service
@@ -80,13 +80,13 @@ The service will start and be available at `https://localhost:8501`
 2. Run the container:
 
 ```bash
-docker run -d -p 8501:8501 --name communication-service comapi-1.0.0
+docker run -d -p 8501:8501 --name act-core-service comapi-1.0.0
 ```
 
 For debugging purposes, you can run the container in interactive mode:
 
 ```bash
-docker run -it -p 8501:8501 --name communication-service comapi-1.0.0 /bin/bash
+docker run -it -p 8501:8501 --name act-core-service apicore-1.0.0 /bin/bash
 ```
 
 ## API Documentation
